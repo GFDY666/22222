@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <style type="text/css">
+        * {
+            margin:0;
+            padding:0;
+        }
+        a{
+            text-decoration: none;
+        }
+        .container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin:10px auto 0 auto;
+            box-shadow: 0 0 5px green;
+            overflow: hidden;
+        }  
+        .wrap {
+            position: absolute;
+            width: 4200px;
+            height: 400px;
+            z-index: 1;
+        }
+        .container .wrap img {
+            float: left;
+            width: 600px;
+            height: 400px;
+        }
+        .container .buttons {
+            position: absolute;
+            right: 60px;
+            bottom:20px;
+            width: 160px;
+            height: 10px;
+            z-index: 2;
+        }
+         .container .buttons span {
+            margin-left: 5px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: green;
+            text-align: center;
+            color:white;
+            cursor: pointer;
+        }
+        .container .buttons span.on{
+            background-color: red;
+        }
+        .container .arrow {
+            position: absolute;
+            top: 35%;
+            color: green;
+            padding:0px 17px;
+            border-radius: 50%;
+            font-size: 50px;
+            z-index: 2;
+            display: none;
+        }
+        .container .arrow_left {
+            left: 10px;
+        }
+        .container .arrow_right {
+            right: 10px;
+        }
+        .container:hover .arrow {
+            display: block;
+        }
+        .container .arrow:hover {
+            background-color: rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="wrap" id="wrap" style="left:-600px;">
+            <img src="image5.png" >
+            <img src="image1.png" >
+            <img src="image2.png" >
+            <img src="image3.png" >
+            <img src="image4.png" >
+            <img src="image5.png" >
+            <img src="image1.png" >
+        </div>
+        <div class="buttons">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+        </div>
+        <a href="javascript:;" id="arrow_left" class="arrow arrow_left"><</a>
+        <a href="javascript:;" id="arrow_right" class="arrow arrow_right">></a>
+    </div>
+    <script type="text/javascript">
+        var wrap = document.getElementById("wrap");
+        var next = document.getElementById("arrow_right");
+        var prev = document.getElementById("arrow_left");
+        next.onclick = function () {
+            next_pic();
+        }
+        prev.onclick = function () {
+            prev_pic();
+        }
+        function next_pic () {
+            index++;
+            if(index > 4){
+              index = 0;
+            }            
+            showCurrentDot();
+            var newLeft = parseInt(wrap.style.left)-600;
+            if(newLeft==-4200){
+                newLeft=-1200;
+            }
+            wrap.style.left = newLeft + "px";
+        }
+        function prev_pic () {
+            index--;
+            if(index < 0)
+            {
+                index = 4;
+            }
+            showCurrentDot();
+            var newLeft = parseInt(wrap.style.left)+600;
+            if(newLeft==600)
+            {
+                newLeft=-2400;
+            }
+            wrap.style.left = newLeft + "px";
+        }
+        var timer = null;
+        /*setTimeout计时器写法
+        function autoPlay () {
+           
+                next_pic();
+           timer= setTimeout("autoPlay()",1000);
+        }
+        setTimeout("autoPlay()",1000);*/
+        //setInterval计时器写法
+        function autoPlay () {
+          timer = setInterval("next_pic()",1000);
+        }
+        autoPlay();
+        var container = document.getElementById("container");
+        container.onmouseenter = function () {
+          clearInterval(timer);
+        }
+        container.onmouseleave = function () {
+          autoPlay();  
+        }
+        var index = 0;
+        var dots = document.getElementsByTagName("span");
+        function showCurrentDot () {
+          for(var i = 0, len = dots.length; i < len; i++){
+            dots[i].className = "";
+          }
+          dots[index].className = "on";
+        }
+        showCurrentDot ();
+        for(var i=0;i<dots.length;i++){
+            (function(i){
+                dots[i].onclick=function(){           
+                    index=i;
+                    showCurrentDot();
+                    var newLeft=-(600*(i+1));
+                    wrap.style.left=newLeft+"px";
+                }
+            })(i);
+        }
+    </script>
+</body>
+</html>
+
+   
